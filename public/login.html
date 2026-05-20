@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <div>
+        <label for="username">Nutzername: </label>
+        <input id="username"> <br>
+        <label for="password">Passwort: </label>
+        <input id="password" type="password"> <br>
+        <button id="login" onclick="login()">login</button>
+    </div>
+
+    <script>
+        async function login(){
+            const nutzername = document.getElementById("username").value;
+            const passwort = document.getElementById("password").value;
+
+            console.log("Vor dem Fetch");
+
+            const res = await fetch("/login", {
+                method: "POST", 
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nutzername,
+                    passwort
+                })
+            });
+
+            console.log("Nach dem Fetch");
+
+            const data = await res.json();
+
+            if(data.success){
+                console.log("Korrekter Benutzer");
+                window.location.href = "/index.html";
+            }
+            else{
+                console.log("Die Logindaten sind nicht korrekt");
+            }
+
+
+        }
+    </script>
+</body>
+</html>

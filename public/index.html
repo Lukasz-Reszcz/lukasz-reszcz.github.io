@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input id="user" placeholder="Nutzername eingeben"> <br>
+<input id="input" placeholder="Text eingeben">
+<button onclick="save()">Speichern</button>
+<button onclick="load()">Laden</button>
+
+<div id="chatverlauf">
+
+</div>
+<p id="test"></p>
+
+<script>
+async function save() {
+    const user = document.getElementById("user").value;
+    const nachricht = document.getElementById('input').value;
+
+    await fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user, nachricht })
+    });
+}
+
+async function load() {
+    const res = await fetch('/load');
+    const data = await res.json();
+    const chatbox = document.getElementById('chatverlauf');
+    
+
+    for(let i=0; i<data.length; i++){
+        let nachricht = document.createElement("div");
+        let nachrichtText = document.createElement("p");
+
+        nachrichtText.textContent = data[i].user + ": " + data[i].nachricht;
+
+        nachricht.appendChild(nachrichtText);
+        chatbox.appendChild(nachricht);
+    }
+
+    
+}
+</script>
+
+</body>
+</html>
