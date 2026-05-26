@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        #KENutzerdaten{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Login</h1>
@@ -13,6 +19,17 @@
         <label for="password">Passwort: </label>
         <input id="password" type="password"> <br>
         <button id="login" onclick="login()">login</button>
+    </div>
+
+    <div id="formKontoErstellen">
+        <p id="labelKontoerstellen">Konto erstellen</p>
+        <div id="KENutzerdaten" style="display: none;">
+            <label>Benutzername: </label>
+            <input id="KENutzername"> <br>
+            <label>Passwort: </label>
+            <input id="KEPasswort" type="password"> <br>
+            <button onclick="kontoErstellen()">Konto erstellen</p>
+        </div>
     </div>
 
     <script>
@@ -42,11 +59,42 @@
                 window.location.href = "/index.html";
             }
             else{
-                console.log("Die Logindaten sind nicht korrekt");
+                alert(data.message);
             }
-
-
         }
+        
+
+        async function kontoErstellen(){
+            const nutzername = document.getElementById("KENutzername").value;
+            const passwort = document.getElementById("KEPasswort").value;
+            
+
+
+            const res = await fetch("/nutzerAnlegen", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nutzername: nutzername,
+                    passwort: passwort
+                })
+            })
+
+            let meldung = await res.json();
+            alert(meldung.text);
+        }
+
+        
+        document.getElementById("labelKontoerstellen").addEventListener("click", () => {
+            let form = document.getElementById("KENutzerdaten");
+
+            if(form.style.display === "none")
+                form.style.display = "block";
+            else    
+                form.style.display = "none";
+        })
+        
     </script>
 </body>
 </html>

@@ -13,6 +13,7 @@
 <p id="test"></p>
 
 <script>
+
 async function save() {
     const user = document.getElementById("user").value;
     const nachricht = document.getElementById('input').value;
@@ -29,6 +30,9 @@ async function load() {
     const data = await res.json();
     const chatbox = document.getElementById('chatverlauf');
     
+
+    // Reset Chatbox
+    chatbox.replaceChildren();
 
     for(let i=0; i<data.length; i++){
         let nachricht = document.createElement("div");

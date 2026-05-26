@@ -61,10 +61,47 @@ app.post("/login", (req, res) => {
     for(let i=0; i<NUTZER.length; i++){
         if(nutzername === NUTZER[i].username && passwort === NUTZER[i].passwort){
             aktuellerNutzer = NUTZER[i];
-            res.json({success: true});
+            return res.send({success: true});
         }
     }
+
+    res.send({success: false,
+        message: "Der Login oder das Passwort wurden falsch geschrieben oder der Nutzer existiert nicht"
+    });
 });
 
+app.post("/nutzerAnlegen", (req, res) => {
+    const {nutzername, passwort} = req.body;
+    const NUTZER = JSON.parse(fs.readFileSync(NUTZERFILE));
 
-app.listen(3000, () => console.log('Server läuft auf Port 3000'));
+    for(let i=0; i< NUTZER.length; i++){
+        if(nutzername == NUTZER[i].username){
+            res.send({ok: false,
+                text: "Nutzer mit diesem Namen existiert schon"
+            })
+            break;
+        }
+        if(passwort == NUTZER[i].passwort){
+            res.send({ok: false,
+                text: "Der Nutzer " + NUTZER[i].username + " benutzt schon dieses Passwort"
+            })
+            break;
+        }
+    }
+
+    const neuerNutzer = {
+        username: nutzername,
+        passwort: passwort
+    };
+
+    NUTZER.push(neuerNutzer);
+
+    fs.writeFileSync("users.json", JSON.stringify(NUTZER));
+
+    res.send({ok: true,
+        text: "Der Nutzer wurde angelegt"
+    })
+})
+
+
+app.listen(5500, () => console.log('Server läuft auf Port 5500'));
